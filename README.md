@@ -17,3 +17,9 @@ To use this dataset, follow these steps:
 
 The expected folder structure after extracting the dataset should look like this:
 
+├───Dataset
+│   └───archive
+│       └───iam_words
+│           └───words
+│               ├───a01
+│               │   ├───a01-000u
