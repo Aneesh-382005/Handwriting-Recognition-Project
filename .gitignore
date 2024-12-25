@@ -1,2 +1,4 @@
 Dataset/
 Data/
+__pycache__/
+*.pyc
