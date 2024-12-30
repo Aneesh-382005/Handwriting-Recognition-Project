@@ -7,9 +7,9 @@ from DataLoading.preprocessing import savePreprocessedImages
 
 print(os.getcwd())
 
-datasetPATH = os.path.join('Dataset', 'archive', 'iam_words')
+datasetPATH = os.path.join('Datasets', 'archive', 'iam_words')
 wordsPATH = os.path.join(datasetPATH, 'words')
-labelsPATH = os.path.join('Dataset', 'archive', 'words_new.txt')
+labelsPATH = os.path.join('Datasets', 'archive', 'words_new.txt')
 
 print("Dataset Path:", datasetPATH)
 print("Words Path:", wordsPATH)
