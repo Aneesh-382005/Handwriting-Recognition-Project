@@ -2,3 +2,5 @@ Datasets/
 Data/
 __pycache__/
 *.pyc
+.env
+Padhai/
