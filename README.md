@@ -27,3 +27,23 @@ Dataset
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── a01-000u  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── a01-001u  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── a02
+
+
+
+
+## Features
+
+- **Image Preprocessing:** Utilizes OpenCV to preprocess handwritten images, enhancing recognition accuracy.
+- **C++ and Python Integration:** Employs pybind11 to bind C++ code with Python, ensuring high performance and flexibility.
+- **Modular Design:** Organized codebase with distinct modules for different stages of handwriting recognition.
+
+
+## Credits
+
+This project utilizes code from [Arthur Flor's Handwritten Text Segmentation repository](https://github.com/arthurflor23/handwritten-text-segmentation). The following files have been adapted:
+
+- **main.cpp**: Minor modifications and component moved to **ImageProcessing.cpp**
+- **bindings.cpp**: Bindings to facilitate integration between C++ components and Python.
+
+These enhancements aim to optimize performance and provide greater flexibility for users engaging with the handwriting recognition system.
+
