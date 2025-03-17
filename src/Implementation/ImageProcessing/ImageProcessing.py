@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "build/Release")))
-print(os.path.abspath(os.path.join(os.path.dirname(__file__), "build/Release")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../build/Release")))
+print(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../build/Release")))
 
 opencv_dll_path = os.getenv('OPENCV_DLL_PATH')
 
