@@ -38,7 +38,8 @@ class IAMWordDataset(Dataset):
             raise RuntimeError(f"Error loading image {imgPath}: {e}")
         
         if self.transform:
-            image = self.transform(image)
+            augumented = self.transform(image)
+            image = augumented['image']
 
         return image, groundTruth
         

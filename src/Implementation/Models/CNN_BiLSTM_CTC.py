@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 class CNNBiLSTMCTC(nn.Module):
-    def __init__(self, numberofClasses):
+    def __init__(self, numberofClasses, hiddenSize = 256):
         super(CNNBiLSTMCTC, self).__init__()
         
         self.cnn = nn.Sequential(
@@ -14,7 +14,7 @@ class CNNBiLSTMCTC(nn.Module):
             nn.MaxPool2d(2, 2),
         )
 
-        self.biLSTM = nn.LSTM(128 * 8, num_layers = 2, bidirectional = True, batch_first = True)
+        self.biLSTM = nn.LSTM(128 * 8, num_layers = 2, bidirectional = True, batch_first = True, hidden_size = hiddenSize)
         self.fc = nn.Linear(256 * 2, numberofClasses)
 
     def forward(self, x):

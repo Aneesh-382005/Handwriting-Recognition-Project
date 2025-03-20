@@ -1,7 +1,7 @@
 import pandas as pd
 
 data = pd.read_csv('Data\LabelsForPreprocessedImages.csv')
-words = data['word'].tolist()
+words = data.loc[data['segmentationStatus'] == 'ok', 'word'].tolist()
 
 uniqueCharacters = set()
 for word in words:
