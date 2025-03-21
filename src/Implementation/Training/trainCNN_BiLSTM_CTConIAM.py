@@ -70,7 +70,7 @@ def TrainModel(model, trainLoader, numberofEpochs, optimizer, CTCLoss, device):
 if __name__ == "__main__":     
     numberofClasses = len(uniqueCharacters) + 1
     batchSize = 32
-    learningRate = 1e-3
+    learningRate = 1e-4
     numberofEpochs = 30
 
     from albumentations import Compose, ShiftScaleRotate, RandomBrightnessContrast, Normalize, Resize, Affine
@@ -79,8 +79,8 @@ if __name__ == "__main__":
     transform = Compose([
     Resize(height=32, width=128, interpolation=1),
     Affine(
-        shift=(0.05, 0.05),  # Shift by up to 5% of image dimensions
         scale=(0.9, 1.1),     # Scale changes between 90% and 110%
+        translate_percent = (0.05, 0.05), # Shift by 5% in both directions
         rotate=10,           # Rotate by up to 10 degrees
         border_mode=0,      # Use constant border with value 0 (black)
         p=0.7               # Apply with 70% probability
@@ -91,15 +91,16 @@ if __name__ == "__main__":
     ])
 
     dataset = IAMWordDataset("Data/LabelsForPreprocessedImages.csv", transform = transform, statusFilter = 'ok')
-    trainLoader = torch.utils.data.DataLoader(dataset, batch_size = batchSize, shuffle = True, num_workers = 4)
+    trainLoader = torch.utils.data.DataLoader(dataset, batch_size = batchSize, shuffle = True, num_workers = 8)
 
 
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(device)
     model = CNNBiLSTMCTC(numberofClasses).to(device)
     optimizer = optim.Adam(model.parameters(), lr = learningRate)
     CTCLoss = nn.CTCLoss(blank = 0)
 
     TrainModel(model, trainLoader, numberofEpochs, optimizer, CTCLoss, device)
 
-
+    

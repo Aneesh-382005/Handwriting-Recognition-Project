@@ -4,6 +4,7 @@ from PIL import Image, UnidentifiedImageError
 from torch.utils.data import Dataset, random_split
 from torchvision import transforms
 import torch
+import numpy as np
 
 class IAMWordDataset(Dataset):
     def __init__(self, csvFile, transform = None, statusFilter = None):
@@ -33,13 +34,16 @@ class IAMWordDataset(Dataset):
         imgPath = self.data.iloc[index]["imagePath"]
         groundTruth = self.data.iloc[index]["word"]
         try:
-            image = Image.open(imgPath).convert('RGB')
+            image = Image.open(imgPath).convert("L")
         except (FileNotFoundError, UnidentifiedImageError) as e:
             raise RuntimeError(f"Error loading image {imgPath}: {e}")
         
+
         if self.transform:
-            augumented = self.transform(image)
-            image = augumented['image']
+            augmented = self.transform(image = image)
+            image = augmented['image']
+        
+        image = np.array(image)
 
         return image, groundTruth
         
