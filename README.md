@@ -40,10 +40,11 @@ Dataset
 
 ## Credits
 
-This project utilizes code from [Arthur Flor's Handwritten Text Segmentation repository](https://github.com/arthurflor23/handwritten-text-segmentation). The following files have been adapted:
+This project utilizes code from [Arthur Flor's Handwritten Text Segmentation repository](https://github.com/arthurflor23/handwritten-text-segmentation). The [/src/Implementation/ImageProcessing/cpp](https://github.com/Aneesh-382005/Handwriting-Recognition-Project/tree/main/src/Implementation/ImageProcessing/cpp) folder has been adapted with changes to:
 
-- **main.cpp**: Minor modifications and component moved to **ImageProcessing.cpp**
-- **bindings.cpp**: Bindings to facilitate integration between C++ components and Python.
+- [**main.cpp**](https://github.com/Aneesh-382005/Handwriting-Recognition-Project/blob/main/src/Implementation/ImageProcessing/cpp/main.cpp): Minor modifications and component moved to **ImageProcessing.cpp**
+- [**bindings.cpp**](https://github.com/Aneesh-382005/Handwriting-Recognition-Project/blob/main/src/Implementation/ImageProcessing/cpp/bindings.cpp): Bindings to facilitate integration between C++ components and Python.
+
 
 These enhancements aim to optimize performance and provide greater flexibility for users engaging with the handwriting recognition system.
 
