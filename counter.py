@@ -14,4 +14,7 @@ indexToChar = {index: character for character, index in chartoIndex.items()}
 
 print("Unique characters: ", uniqueCharacters)
 print("Character to index: ", chartoIndex)
-print(len(uniqueCharacters))
+
+numberOfClasses = len(uniqueCharacters + 1)
+
+print(numberOfClasses)

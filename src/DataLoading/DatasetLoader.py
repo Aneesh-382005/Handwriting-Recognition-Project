@@ -38,12 +38,12 @@ class IAMWordDataset(Dataset):
         except (FileNotFoundError, UnidentifiedImageError) as e:
             raise RuntimeError(f"Error loading image {imgPath}: {e}")
         
+        image = np.array(image)
 
         if self.transform:
             augmented = self.transform(image = image)
             image = augmented['image']
         
-        image = np.array(image)
 
         return image, groundTruth
         

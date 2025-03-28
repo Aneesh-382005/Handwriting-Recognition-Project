@@ -7,3 +7,5 @@ Padhai/
 .vscode
 build/
 saves/
+outputText/
+Checkpoints/

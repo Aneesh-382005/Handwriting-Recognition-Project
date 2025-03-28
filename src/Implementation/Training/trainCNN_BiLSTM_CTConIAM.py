@@ -1,5 +1,6 @@
 import torch.optim as optim
 import torch.nn.functional as F
+from torch.optim import lr_scheduler
 import torch 
 import torch.nn as nn
 import torch.utils.data
@@ -25,7 +26,7 @@ for word in words:
         uniqueCharacters.add(character)
 
 uniqueCharacters = sorted(uniqueCharacters)
-chartoIndex = {character: index for index, character in enumerate(uniqueCharacters)}
+chartoIndex = {character: index + 1 for index, character in enumerate(uniqueCharacters)}
 
 
 
@@ -43,7 +44,7 @@ def ConvertTargets(targets):
     return targetSequence, targetLengths
 
 
-def TrainModel(model, trainLoader, numberofEpochs, optimizer, CTCLoss, device):
+def TrainModel(model, trainLoader, numberofEpochs, optimizer, scheduler, CTCLoss, device):
     model.train()
     for epoch in range(numberofEpochs):
         epochLoss = 0.0
@@ -52,28 +53,44 @@ def TrainModel(model, trainLoader, numberofEpochs, optimizer, CTCLoss, device):
             targetSequence, targetLengths = ConvertTargets(labels)
             targetSequence = targetSequence.to(device)
 
-            logits = model(images)
+            logits = model(images).permute(1, 0, 2)
             T, batchSize, _ = logits.size()
 
-            inputLengths = torch.full(size = (batchSize,), fill_value = T, dtype = torch.long)
+            inputLengths = torch.full(size = (batchSize,), fill_value = T, dtype = torch.long, device = device)
+
             loss = CTCLoss(logits, targetSequence, inputLengths, targetLengths)
 
             optimizer.zero_grad()
             loss.backward()
+                
             optimizer.step()
 
             epochLoss += loss.item()
 
+        scheduler.step()
         averageLoss = epochLoss / len(trainLoader)
         print(f"Epoch [{epoch + 1}/{numberofEpochs}], Loss: {averageLoss:.4f}")
+        
+        checkpointPath = os.path.join("Checkpoints", "CNN_BiLSTM_CTC", f'modelEpoch{epoch + 1}.pth')
+        os.makedirs(os.path.dirname(checkpointPath), exist_ok = True)
+        torch.save({
+            'epoch': epoch + 1,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': averageLoss
+        }, checkpointPath)
+        
+        print(f"Checkpoint saved at {checkpointPath}")
         
 if __name__ == "__main__":     
     numberofClasses = len(uniqueCharacters) + 1
     batchSize = 32
-    learningRate = 1e-4
+    learningRate = 1e-3
     numberofEpochs = 30
 
-    from albumentations import Compose, ShiftScaleRotate, RandomBrightnessContrast, Normalize, Resize, Affine
+    os.environ['NO_ALBUMENTATIONS_UPDATE'] = '1'
+
+    from albumentations import Compose, RandomBrightnessContrast, Normalize, Resize, Affine
     from albumentations.pytorch import ToTensorV2
 
     transform = Compose([
@@ -99,8 +116,12 @@ if __name__ == "__main__":
     print(device)
     model = CNNBiLSTMCTC(numberofClasses).to(device)
     optimizer = optim.Adam(model.parameters(), lr = learningRate)
+    scheduler = lr_scheduler.StepLR(optimizer, step_size = 10, gamma = 0.1)
     CTCLoss = nn.CTCLoss(blank = 0)
 
-    TrainModel(model, trainLoader, numberofEpochs, optimizer, CTCLoss, device)
+    TrainModel(model, trainLoader, numberofEpochs, optimizer, scheduler, CTCLoss, device)
+
+    torch.save(model.state_dict(), '')
+
 
     
