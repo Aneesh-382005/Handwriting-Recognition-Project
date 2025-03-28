@@ -13,20 +13,20 @@ from src.Implementation.Models.CNN_BiLSTM_CTC import CNNBiLSTMCTC
 import os
 from datetime import datetime
 
-device = 'cuda'
+device = 'cuda' if torch.cuda_is_available() else 'cpu'
 
-def load_model(model_path, numberofClasses, device):
+def loadModel(model_path, numberofClasses, device):
     model = CNNBiLSTMCTC(numberofClasses).to(device)
-    checkpoint = torch.load(model_path, map_location=device)
+    checkpoint = torch.load(model_path, map_location=device, weights_only = True)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
     return model
 
-def preprocess_image(image_path, transform):
+def preprocessImage(image_path, transform):
     image = Image.open(image_path).convert('L')
     return transform(image).unsqueeze(0)
 
-def decode_ctc_output(output, alphabet):
+def decodeCTCoutput(output, alphabet):
     return ''.join([alphabet[i] for i in torch.argmax(output.squeeze(0), dim=1) if i != 0])
 
 transform = transforms.Compose([
@@ -38,7 +38,7 @@ transform = transforms.Compose([
 alphabet = ['', ' ', '!', '"', '#', "'", '(', ')', '*', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '?', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 numberofClasses = len(alphabet)
 
-model = load_model('checkpoints\\CNN_BiLSTM_CTC\\modelEpoch30.pth', numberofClasses, device)
+model = loadModel('checkpoints\\CNN_BiLSTM_CTC\\modelEpoch30.pth', numberofClasses, device)
 
 path = 'outputText\\words'
 predictedLine = []
@@ -48,9 +48,9 @@ t1 = datetime.now()
 with torch.no_grad():
     for word in os.listdir(path):
         image_path = os.path.join(path, word)
-        image = preprocess_image(image_path, transform).to(device)
+        image = preprocessImage(image_path, transform).to(device)
         output = model(image)
-        predictedLine.append(decode_ctc_output(output, alphabet))
+        predictedLine.append(decodeCTCoutput(output, alphabet))
 
 print(predictedLine)
 print(datetime.now() - t1)
