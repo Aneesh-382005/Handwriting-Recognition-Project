@@ -13,7 +13,7 @@ from src.Implementation.Models.CNN_BiLSTM_CTC import CNNBiLSTMCTC
 import os
 from datetime import datetime
 
-device = 'cuda' if torch.cuda_is_available() else 'cpu'
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def loadModel(model_path, numberofClasses, device):
     model = CNNBiLSTMCTC(numberofClasses).to(device)
